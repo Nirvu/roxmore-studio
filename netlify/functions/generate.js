@@ -10,24 +10,25 @@ exports.handler = async (event) => {
   let body;
   try { body = JSON.parse(event.body); } catch (e) { return { statusCode: 400, body: JSON.stringify({ error: 'Invalid JSON' }) }; }
 
-  // Extract the brief from the message
   const userMsg = body.messages[0].content;
   const briefMatch = userMsg.match(/specified this brief: "([^"]+)"/);
   const brief = briefMatch ? briefMatch[1] : 'marketing strategy for UK business owners';
 
   const prompt = `Write a short blog article for Roxmore, a UK marketing consultancy. Topic: "${brief}".
 
-Return ONLY valid JSON, no markdown. Single object with these exact fields:
+IMPORTANT: Return ONLY a single JSON object (not an array). No markdown fences. Start with { and end with }.
+
+The JSON object must have these exact fields:
 - slug: url-safe string
-- title: compelling SEO title
-- category: one of Marketing/Growth Strategy/Lead Generation/Leadership/Business Development  
+- title: compelling SEO title string
+- category: one of these exact strings: Marketing, Growth Strategy, Lead Generation, Leadership, Business Development
 - readTime: "5 min read"
-- excerpt: 2 sentence summary
-- metaTitle: 58 char title
-- metaDescription: 150 char description
-- metaKeywords: array of 5 strings
-- faqSchema: array of 2 objects with question and answer fields
-- body: HTML article with blockquote for quick answer, 2 h2 headings, 3 paragraphs, ul list
+- excerpt: string with 2 sentences
+- metaTitle: string under 60 chars
+- metaDescription: string under 155 chars
+- metaKeywords: array of 5 keyword strings
+- faqSchema: array of 2 objects each with "question" and "answer" string fields
+- body: string containing HTML with a blockquote, 2 h2 tags, 3 p tags
 - publishDate: "${new Date().toISOString()}"
 - featured: false
 - seoScore: "A"
