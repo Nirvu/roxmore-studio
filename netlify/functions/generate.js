@@ -14,25 +14,7 @@ exports.handler = async (event) => {
   const briefMatch = userMsg.match(/specified this brief: "([^"]+)"/);
   const brief = briefMatch ? briefMatch[1] : 'marketing strategy for UK business owners';
 
-  const prompt = `Write a short blog article for Roxmore, a UK marketing consultancy. Topic: "${brief}".
-
-IMPORTANT: Return ONLY a single JSON object (not an array). No markdown fences. Start with { and end with }.
-
-The JSON object must have these exact fields:
-- slug: url-safe string
-- title: compelling SEO title string
-- category: one of these exact strings: Marketing, Growth Strategy, Lead Generation, Leadership, Business Development
-- readTime: "5 min read"
-- excerpt: string with 2 sentences
-- metaTitle: string under 60 chars
-- metaDescription: string under 155 chars
-- metaKeywords: array of 5 keyword strings
-- faqSchema: array of 2 objects each with "question" and "answer" string fields
-- body: string containing HTML with a blockquote, 2 h2 tags, 3 p tags
-- publishDate: "${new Date().toISOString()}"
-- featured: false
-- seoScore: "A"
-- wordCount: 350`;
+  const prompt = 'You are a content writer for Roxmore, a UK marketing consultancy. Write a blog article about: "' + brief + '". Return ONLY a single JSON object starting with { and ending with }. No arrays, no markdown, no extra text. The object must have: slug (string), title (string), category (string, one of: Marketing, Growth Strategy, Lead Generation, Leadership, Business Development), readTime (string "5 min read"), excerpt (string, 2 sentences), metaTitle (string under 60 chars), metaDescription (string under 155 chars), metaKeywords (array of 5 strings), faqSchema (array of 2 objects with question and answer keys), body (string of HTML with blockquote quick answer, 2 h2 headings, 3 p tags), publishDate (string "' + new Date().toISOString() + '"), featured (boolean false), seoScore (string "A"), wordCount (number 350).';
 
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
